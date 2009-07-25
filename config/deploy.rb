@@ -27,7 +27,7 @@ set :deploy_to, "/home/#{user}/apps/#{application}"
 # # =============================================================================
 set :scm, "git"
 set :repository,  "git@github.com:scottmotte/#{application}.git"
-set :branch, "wiki.mottemanagers.com"
+set :branch, "master"
 set :deploy_via, :remote_cache
 
 # =============================================================================
