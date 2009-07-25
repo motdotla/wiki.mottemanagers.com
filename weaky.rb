@@ -87,6 +87,7 @@ post '/save' do
 end
 
 get '/:name' do
+  items = Item.by_name(:key => params[:name])
   "hello there"
   # items = Item.by_name(:key => params[:name])
   # if items.count == 1 then
