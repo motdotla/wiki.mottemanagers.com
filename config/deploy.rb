@@ -69,9 +69,10 @@ namespace :deploy do
   
   desc "Install dependency gems"
   task :dependency_gems do
-    sudo "gem install sinatra"
-    sudo "gem install maruku"
-    sudo "gem install haml"
+    run 'sudo gem install sinatra'
+    run 'sudo gem install maruku'
+    run 'sudo gem install haml'
+    run 'sudo gem install couchrest'
   end  
 end
 
