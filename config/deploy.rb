@@ -5,7 +5,7 @@ set :use_sudo, false
 # CUSTOM OPTIONS
 # =============================================================================
 set :user, "scottmotte"
-set :application, "weaky"
+set :application, "wiki.mottemanagers.com"
 set :domain, "wiki.mottemanagers.com"
 
 role :app, domain, :cron => true

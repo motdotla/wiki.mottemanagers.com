@@ -5,7 +5,7 @@ require 'haml'
 require 'maruku'
 
 SERVER = CouchRest.new
-DB = SERVER.database!('weaky')
+DB = SERVER.database!('wiki.mottemanagers.com')
 
 
 class Item < CouchRest::ExtendedDocument
