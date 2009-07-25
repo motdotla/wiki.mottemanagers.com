@@ -7,8 +7,12 @@
            :type => 'text/css', |
            :href => '/stylesheet.css' } |
   %body
-    %h1
-      %a{ :href => '/home' } weaky
-    %h2= @title || (@item && @item.name) || 'weaky'
-    #content
-      = yield
+    #page
+      #header
+        %h1
+          %a{ :href => '/home' } weaky
+        %h2= @title || (@item && @item.name) || 'weaky'
+      #content
+        = yield
+        
+      #footer
