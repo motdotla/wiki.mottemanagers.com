@@ -66,6 +66,14 @@ namespace :deploy do
     sudo '/etc/init.d/nginx stop'
     sudo '/etc/init.d/nginx start'
   end
+  
+  desc "Install dependency gems"
+  task :dependency_gems do
+    sudo "gem install sinatra"
+    sudo "gem install maruku"
+    sudo "gem install haml"
+  end  
 end
 
 after "deploy:update_code", "deploy:cleanup"
+after "deploy:cleanup", "deploy:dependency_gems"
