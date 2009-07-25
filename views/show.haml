@@ -1,6 +1,7 @@
 #admin
-  %a{ :href => @item.edit_url } edit
-  / %a{ :href => @item.revs_url } revisions
-  %a{ :href => '/new/title_here' } new
+  / %a{ :href => @item.edit_url } edit
+  / / %a{ :href => @item.revs_url } revisions
+  / %a{ :href => '/new/title_here' } new
 #item
-  = @item.body_html
+  = @item.inspect
+  / = @item.body_html
