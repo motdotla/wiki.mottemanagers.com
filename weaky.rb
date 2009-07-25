@@ -87,18 +87,19 @@ post '/save' do
 end
 
 get '/:name' do
-  items = Item.by_name(:key => params[:name])
-  if items.count == 1 then
-    @item = items.first
-    haml :show
-  elsif items.count == 0 then
-    @item = Item.new(:name => params[:name])
-    redirect @item.new_url
-  else
-    @items = items
-    @title = "disambiguation"
-    haml :disambiguation
-  end
+  "hello there"
+  # items = Item.by_name(:key => params[:name])
+  # if items.count == 1 then
+  #   @item = items.first
+  #   haml :show
+  # elsif items.count == 0 then
+  #   @item = Item.new(:name => params[:name])
+  #   redirect @item.new_url
+  # else
+  #   @items = items
+  #   @title = "disambiguation"
+  #   haml :disambiguation
+  # end
 end
 
 get '/id/:id' do
