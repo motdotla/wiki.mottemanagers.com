@@ -3,10 +3,14 @@ require 'sinatra'
 require 'couchrest'
 require 'maruku'
 
-CouchRest::Model.default_database = CouchRest.database!('weaky')
+SERVER = CouchRest.new
+DB = SERVER.database!('weaky')
 
-class Item < CouchRest::Model
-  key_accessor :name, :body
+class Item < CouchRest::ExtendedDocument
+  use_database DB
+  
+  property :name
+  property :body
   view_by :name
 
   WIKI_LINK_REGEX = /\[\[[A-Za-z0-9_\- ]+\]\]/
