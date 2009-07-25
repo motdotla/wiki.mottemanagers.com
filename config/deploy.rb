@@ -73,6 +73,7 @@ namespace :deploy do
     run 'sudo gem install maruku'
     run 'sudo gem install haml'
     run 'sudo gem install couchrest'
+    run 'sudo gem install json'
   end  
 end
 
