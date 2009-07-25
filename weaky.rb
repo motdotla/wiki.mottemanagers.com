@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'couchrest'
+require 'haml'
 require 'maruku'
 
 SERVER = CouchRest.new
