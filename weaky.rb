@@ -3,11 +3,6 @@ require 'sinatra'
 require 'couchrest'
 require 'maruku'
 
-get '/' do
-  "Worked on dreamhost"
-end
-
-
 SERVER = CouchRest.new
 DB = SERVER.database!('weaky')
 
