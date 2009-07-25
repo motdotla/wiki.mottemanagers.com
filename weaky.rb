@@ -88,7 +88,7 @@ end
 
 get '/:name' do
   items = Item.by_name(:key => params[:name])
-  "hello there #{items.count}"
+  "hello there #{items.inspect} #{items.size}"
   # if items.count == 1 then
   #   @item = items.first
   #   haml :show
