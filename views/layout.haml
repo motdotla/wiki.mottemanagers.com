@@ -11,8 +11,9 @@
       #header
         %h1
           %a{ :href => '/home' } weaky
-        %h2= @title || (@item && @item.name) || 'weaky'
+        %h2= @title || (@item && @item['name']) || 'weaky'
       #content
         = yield
         
       #footer
+        Wiki software by Ben Atkin (http://github.com/benatkin/weaky/tree/master)

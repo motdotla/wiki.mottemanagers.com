@@ -6,6 +6,7 @@ require 'maruku'
 SERVER = CouchRest.new
 DB = SERVER.database!('weaky')
 
+
 class Item < CouchRest::ExtendedDocument
   use_database DB
   
@@ -58,6 +59,11 @@ class Item < CouchRest::ExtendedDocument
   end
 end
 
+# # helpers
+# def id_url(id, rev=nil)
+#   "/id/#{id}" + (rev ? "/#{rev}" : "")
+# end
+
 get '/stylesheet.css' do
   header 'Content-Type' => 'text/css; charset=utf-8'
   sass :stylesheet
@@ -99,15 +105,17 @@ get '/id/:id' do
   haml :show
 end
 
-get '/id/:id/:rev' do
-  @item = Item.get(params[:id], params[:rev])
-  haml :show
-end
-
-get '/revs/:id' do
-  @item = Item.get(params[:id], true)
-  haml :revisions
-end
+# get '/id/:id/:rev' do
+#   # @item = Item.get(params[:id], params[:rev]) # latest couchrest doesn't support passing in a revision param. the paramify_url method ignores it
+#   @item = CouchRest.get("#{DB.server.uri}/#{DB.name}/#{params[:id]}?rev=#{params[:rev]}")
+#   haml :show
+# end
+# 
+# get '/revs/:id' do
+#   # @item = Item.get(params[:id])
+#   @item = CouchRest.get("#{DB.server.uri}/#{DB.name}/#{params[:id]}?revs=true")
+#   haml :revisions
+# end
 
 get '/edit/:id' do
   @item = Item.get(params[:id])
