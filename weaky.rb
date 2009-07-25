@@ -58,6 +58,11 @@ class Item < CouchRest::ExtendedDocument
   end
 end
 
+get '/stylesheet.css' do
+  header 'Content-Type' => 'text/css; charset=utf-8'
+  sass :stylesheet
+end
+
 get '/' do
   redirect '/home'
 end
@@ -123,9 +128,4 @@ post '/delete/:id' do
   url = item.url
   item.destroy
   redirect url
-end
-
-get '/stylesheet.css' do
-  header 'Content-Type' => 'text/css; charset=utf-8'
-  sass :stylesheet
 end
