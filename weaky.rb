@@ -8,10 +8,10 @@ get '/' do
 end
 
 
-# SERVER = CouchRest.new
-# DB = SERVER.database!('weaky')
-# 
-# 
+SERVER = CouchRest.new
+DB = SERVER.database!('weaky')
+
+
 # class Item < CouchRest::ExtendedDocument
 #   use_database DB
 #   
