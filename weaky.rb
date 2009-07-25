@@ -26,7 +26,7 @@ class Item < CouchRest::ExtendedDocument
     html.gsub(WIKI_LINK_REGEX) do |name_with_brackets|
       name = name_with_brackets[2..-3]
       items = Item.by_name(:key => name)
-      cls = items.count == 0 && 'missing' || ''
+      cls = items.size == 0 && 'missing' || ''
       "<a href=\"/#{ name }\" class=\"#{ cls }\">#{ name }</a>"
     end
   end
@@ -88,18 +88,17 @@ end
 
 get '/:name' do
   items = Item.by_name(:key => params[:name])
-  "hello there #{items.inspect} #{items.size}"
-  # if items.count == 1 then
-  #   @item = items.first
-  #   haml :show
-  # elsif items.count == 0 then
-  #   @item = Item.new(:name => params[:name])
-  #   redirect @item.new_url
-  # else
-  #   @items = items
-  #   @title = "disambiguation"
-  #   haml :disambiguation
-  # end
+  if items.size == 1 then
+    @item = items.first
+    haml :show
+  elsif items.size == 0 then
+    @item = Item.new(:name => params[:name])
+    redirect @item.new_url
+  else
+    @items = items
+    @title = "disambiguation"
+    haml :disambiguation
+  end
 end
 
 get '/id/:id' do
