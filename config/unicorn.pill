@@ -1,0 +1,24 @@
+Bluepill.application("mottemanagerswiki-production", :log_file => "/home/scottmotte/apps/wiki.mottemanagers.com/bluepill.log") do |app|
+  
+  env_vars = "RUBY_HEAP_MIN_SLOTS=500000 RUBY_HEAP_SLOTS_INCREMENT=250000 RUBY_HEAP_SLOTS_GROWTH_FACTOR=1 RUBY_GC_MALLOC_LIMIT=50000000"
+  
+  app.process("production") do |process|
+    root = "/home/scottmotte/apps/wiki.mottemanagers.com/current"
+    process.pid_file = File.join("/home/scottmotte/apps/wiki.mottemanagers.com/current/", 'tmp', 'pids', 'unicorn.pid')
+    process.working_dir = "/home/scottmotte/apps/wiki.mottemanagers.com/current/"
+    
+    process.start_command = "/usr/bin/env #{env_vars} /opt/ruby-enterprise-1.8.7-2010.01/bin/unicorn -Dc config/unicorn.rb -E production"
+    process.stop_command = "kill -QUIT {{PID}}"
+    process.restart_command = "kill -USR2 {{PID}}"
+
+    process.start_grace_time = 8.seconds
+    process.stop_grace_time = 5.seconds
+    process.restart_grace_time = 13.seconds
+
+    process.monitor_children do |child_process|
+      child_process.stop_command = "kill -QUIT {{PID}}"
+
+      child_process.checks :mem_usage, :every => 10.seconds, :below => 200.megabytes, :times => [3,4]
+    end
+  end
+end
