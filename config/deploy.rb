@@ -1,32 +1,28 @@
-set :runner, "scottmotte"
-set :use_sudo, false
+# =============================================================================
+# ROLES
+# =============================================================================
+role :app, "174.142.75.247"
+role :web, "174.142.75.247"
+role :db,  "174.142.75.247", :primary => true
 
 # =============================================================================
-# CUSTOM OPTIONS
+# SETUP
 # =============================================================================
-set :user, "scottmotte"
-set :application, "wiki.mottemanagers.com"
-set :domain, "wiki.mottemanagers.com"
-
-role :app, domain, :cron => true
-role :web, domain
-role :db,  domain, :primary => true
-
-# =============================================================================
-# DATABASE OPTIONS
-# =============================================================================
-set :migrate_env, "MERB_ENV=production"
+set :user, 'scottmotte'
+set :application, 'wiki.mottemanagers.com'
 
 # =============================================================================
 # DEPLOY TO
 # =============================================================================
-set :deploy_to, "/home/#{user}/apps/#{application}"
+set :deploy_to, "/home/scottmotte/apps/wiki.mottemanagers.com"
+set :scm_verbose, true
+set :use_sudo, false
 
 # # =============================================================================
 # # REPOSITORY
 # # =============================================================================
 set :scm, "git"
-set :repository,  "git@github.com:scottmotte/#{application}.git"
+set :repository,  "git@github.com:scottmotte/wiki.mottemanagers.com.git"
 set :branch, "master"
 set :deploy_via, :remote_cache
 
@@ -35,47 +31,30 @@ set :deploy_via, :remote_cache
 # =============================================================================
 default_run_options[:pty] = true
 ssh_options[:paranoid] = false
-ssh_options[:keys] = %w(/Users/scottmotte/.ssh/id_rsa)
-ssh_options[:port] = 1984
-
-# =============================================================================
-# SINATRA STUFF
-# =============================================================================
-set :stage, :production
-set :app_server, :passenger
 
 # =============================================================================
 # RAKE TASKS & OTHER SERVER TASKS
 # =============================================================================
 namespace :deploy do
-  # override Rails related callbacks
-  task :finalize_update do
-  end
- 
-  desc "Overwrite migrate with datamapper migration"
-  task :migrate do
+  task :install_gems_on_server do
+    sudo "sh -c 'cd #{latest_release} && ruby lib/install_gems.rb'"
   end
   
-  desc 'restart app'
-  task :restart do
-    run "mkdir -p #{latest_release}/tmp; touch #{latest_release}/tmp/restart.txt"
+  desc "Custom restart task for unicorn"
+  task :restart, :roles => :app, :except => { :no_release => true } do    
+    sudo "sh -c 'cd #{latest_release} && /opt/ruby-enterprise-1.8.7-2010.01/bin/bluepill load config/unicorn.pill'"
+    sudo "sh -c 'cd #{latest_release} && /opt/ruby-enterprise-1.8.7-2010.01/bin/bluepill mottemanagerswiki-production restart production'"
   end
-  
-  desc 'restart nginx'
-  task :restart_nginx, :roles => :web do
-    sudo '/etc/init.d/nginx stop'
-    sudo '/etc/init.d/nginx start'
+
+  desc "Custom start task for unicorn"
+  task :start, :roles => :app do
+    sudo "sh -c 'cd #{latest_release} && /opt/ruby-enterprise-1.8.7-2010.01/bin/bluepill mottemanagerswiki-production start production'"
   end
-  
-  desc "Install dependency gems"
-  task :dependency_gems do
-    run 'sudo gem install sinatra'
-    run 'sudo gem install maruku'
-    run 'sudo gem install haml'
-    run 'sudo gem install couchrest'
-    run 'sudo gem install json'
-  end  
+
+  desc "Custom stop task for unicorn"
+  task :stop, :roles => :app do
+    sudo "sh -c 'cd #{latest_release} && /opt/ruby-enterprise-1.8.7-2010.01/bin/bluepill mottemanagerswiki-production stop production'"
+  end
 end
 
-after "deploy:update_code", "deploy:cleanup"
-after "deploy:cleanup", "deploy:dependency_gems"
+after 'deploy:update_code', 'deploy:install_gems_on_server', 'deploy:cleanup'
