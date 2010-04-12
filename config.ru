@@ -11,7 +11,7 @@
 
 
 
-require 'weaky'
+require 'weaky_app'
 
 use Rack::ShowExceptions
 
